@@ -1,0 +1,140 @@
+<!-- declare the doctype at the very top to tell the browser what it's dealing with -->
+<!DOCTYPE html>
+
+<!-- <HTML> The start of our html document; everything goes in here -->
+<html>
+
+<!-- <HEAD> the head is not displayed in the browser;
+    rather, it provides the metadata for the page (telling the browser how to render it-->
+
+<head>
+    <title>A Leaflet map!</title>
+
+    <!-- Linking to our external resources (ie. Leaflet in this case) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+
+    <!-- CSS Styling Start-->
+    <style>
+        /*
+            styling to make map full-screen
+            source: https://leafletjs.com/examples/mobile/
+        */
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        html,
+        body,
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        /*
+            The sidebar menu
+            ref: https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp
+        */
+        .floating-panel {
+            width: 160px; /* Set the width of the sidebar */
+            position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+            z-index: 9999;
+            bottom: 0px;
+            left: 0px;
+            /* Black with some transparency */
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;    /* some nice rounded corners */
+            padding: 10px;
+            margin: 20px;
+            /* Text color */
+            color: aqua;
+        }
+
+        /* The navigation menu links */
+        .floating-panel * {
+/*            padding: 6px 8px 6px 16px;*/
+            text-decoration: none;
+            display: block;
+        }
+
+        /* The navigation menu links */
+        .floating-panel a {
+            color: #410000;
+        }
+
+        /* When you mouse over the navigation links, change their color */
+        .floating-panel a:hover {
+            color: #f1f1f1;
+        }
+
+
+    </style>
+</head>
+
+<!-- <BODY> The content that is rendered on the web page -->
+
+<body>
+
+    <!-- Possible solution for a header -->
+    <nav class="floating-panel">
+        <h2>A Leaflet map!</h2>
+        <h3><a href="https://leafletjs.com" target="_blank">I built this with leaflet</a></h3>
+        <h5>
+            <p>GIS 4533</p>
+            <p>Fall 2020</p>
+            <p>Kris Johnson</p>
+        </h5>
+    </nav>
+
+    <!-- the container for our map -->
+    <div class="main" id="map"></div>
+
+    <!--
+    Javascript! Hurray! The script for our webpage is placed down here since we
+    want the DOM (page objects) to load first and then have our script come in
+    that alters the content of the page (in this case adding a map)
+    ref: https://stackoverflow.com/questions/436411/where-should-i-put-script-tags-in-html-markup
+    -->
+    <script>
+        //---------------------------------------------------------------------
+        // webdev1
+        //    - initialize map
+        //    - add basemap
+        //---------------------------------------------------------------------
+
+        // initialize the map
+        var map = L.map('map').setView([46.7867, -92.1005], 4);
+
+        // load a tile layer
+        // loading the base layer of map tiles using a URL template
+        // this template ({z}/{x}/{y}) allows leaflet to locate tiles with the
+        // correct zoom, x, and y coordinates
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        //---------------------------------------------------------------------
+        // webdev2
+        //    - import airport locations from CSV file
+        //    - style airport markers
+        //---------------------------------------------------------------------
+
+        // Create airport icon using airport.png
+        var airportIcon = L.icon({
+            iconUrl: '../images/airport.png',
+            iconSize: [50,40]
+          });
+
+        // Create custom layer as template for airports layer
+        var customLayer = L.geoJson(null  ,{
+            pointToLayer: function(feature,latlng){
+              return L.marker(latlng,{icon: airportIcon});
+            }
+        });
+
+        // Create airports layer from airports.csv
+        // use customLayer as template
+        var airportsLayer = omnivore.csv('../data/airports.csv', null, customLayer).addTo(map);
+    </script>
+</body></html>

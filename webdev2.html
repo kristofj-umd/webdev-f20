@@ -8,11 +8,14 @@
     rather, it provides the metadata for the page (telling the browser how to render it-->
 
 <head>
-    <title>A Leaflet map!</title>
+    <title>Lesson 2 - Airport Data</title>
 
     <!-- Linking to our external resources (ie. Leaflet in this case) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+    
+    <!-- Leaflet Omnivore resource   -->
+    <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
 
     <!-- CSS Styling Start-->
     <style>
@@ -78,11 +81,10 @@
 
     <!-- Possible solution for a header -->
     <nav class="floating-panel">
-        <h2>A Leaflet map!</h2>
+        <h2>Lesson 2 - Airport Data</h2>
         <h3><a href="https://leafletjs.com" target="_blank">I built this with leaflet</a></h3>
         <h5>
             <p>GIS 4533</p>
-            <p>Fall 2020</p>
             <p>Kris Johnson</p>
         </h5>
     </nav>
@@ -97,15 +99,44 @@
     ref: https://stackoverflow.com/questions/436411/where-should-i-put-script-tags-in-html-markup
     -->
     <script>
+        //---------------------------------------------------------------------
+        // webdev1
+        //    - initialize map
+        //    - add basemap
+        //---------------------------------------------------------------------
+
         // initialize the map
-        var map = L.map('map').setView([46.7867, -92.1005], 11);
+        var map = L.map('map').setView([40.714476284709335, -100.99353790283205], 4);
 
         // load a tile layer
         // loading the base layer of map tiles using a URL template
         // this template ({z}/{x}/{y}) allows leaflet to locate tiles with the
         // correct zoom, x, and y coordinates
         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
+
+        //---------------------------------------------------------------------
+        // webdev2
+        //    - import airport locations from CSV file
+        //    - style airport markers
+        //---------------------------------------------------------------------
+
+        // Create airport icon using airport.png
+        var airportIcon = L.icon({
+            iconUrl: 'airport.png',
+            iconSize: [50,40]
+          });
+
+        // Create custom layer as template for airports layer
+        var customLayer = L.geoJson(null  ,{
+            pointToLayer: function(feature,latlng){
+              return L.marker(latlng,{icon: airportIcon});
+            }
+        });
+
+        // Create airports layer from airports.csv
+        // use customLayer as template
+        var airportsLayer = omnivore.csv('airports.csv', null, customLayer).addTo(map);
     </script>
 </body></html>

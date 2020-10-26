@@ -13,6 +13,9 @@
     <!-- Linking to our external resources (ie. Leaflet in this case) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+    
+    <!-- Leaflet Omnivore resource   -->
+    <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
 
     <!-- CSS Styling Start-->
     <style>
@@ -122,7 +125,7 @@
 
         // Create airport icon using airport.png
         var airportIcon = L.icon({
-            iconUrl: '../images/airport.png',
+            iconUrl: 'airport.png',
             iconSize: [50,40]
           });
 
@@ -135,6 +138,6 @@
 
         // Create airports layer from airports.csv
         // use customLayer as template
-        var airportsLayer = omnivore.csv('../data/airports.csv', null, customLayer).addTo(map);
+        var airportsLayer = omnivore.csv('airports.csv', null, customLayer).addTo(map);
     </script>
 </body></html>
